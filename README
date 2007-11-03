@@ -1,0 +1,48 @@
+= NeedyControllers
+
+Needy Controllers is a way to DRY up commonly used tasks from both controllers and views to save time and effort. It consists of a single call with a number of options.
+
+== Description
+
+With needy controllers, you can include stylesheets, javascripts, and records in your controllers and views with a much greater deal of specificity and automation than hand-coding.
+
+== Usage
+
+To use Needy Controllers for styles and scripts, you simply call needs inside your controller like so:
+
+class MyController < ApplicationController
+  needs :styles => :standard
+  needs :styles => :show, :only => :show
+  needs :scripts => :behave, :except => :show
+
+  def index
+    # this action will have access to the 'standard.css' stylesheet
+  end
+  
+  def show
+    # this action will have access to the 'show.css' stylesheet
+    # in addition to 'standard.css'
+    # but will not have access to 'behave.js'
+  end
+end
+
+To use Needy Controllers for fetching records, you use it similarly:
+
+class MyController < ApplicationController
+  # here's a standard problem
+  needs :record => :user, :except => :index
+  
+  def index
+    # no @user here
+  end
+  
+  def show
+    # you can access @user in your view for this action
+  end
+end
+
+== Other
+
+Created by Michael Bleigh (michael@intridea.com) of Intridea (http://www.intridea.com)
+
+Comments, bugs, and patches go to http://trac.intridea.com/trac/public
