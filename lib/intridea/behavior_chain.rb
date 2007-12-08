@@ -71,7 +71,7 @@ module Intridea
     end
     
     module Helpers
-      def javascript_include_tag(*sources)
+      def javascript_include_tag_with_needs(*sources)
         if sources.include?(:needs)
           sources = sources[0..(sources.index(:needs))] + 
             controller.class.allowed_behaviors_for(controller.action_name) + 
@@ -79,7 +79,7 @@ module Intridea
             
           sources.delete(:needs)
         end
-        super(*sources)
+        javascript_include_tag_without_needs(*sources)
       end
     end
   end

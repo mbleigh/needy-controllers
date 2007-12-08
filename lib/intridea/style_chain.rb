@@ -71,7 +71,7 @@ module Intridea
     end
     
     module Helpers
-      def stylesheet_link_tag(*sources)
+      def stylesheet_link_tag_with_needs(*sources)
         if sources.include? :needs
           sources = sources[0..(sources.index(:needs))] + 
             controller.class.allowed_styles_for(controller.action_name) + 
@@ -79,7 +79,7 @@ module Intridea
             
           sources.delete(:needs)
         end
-        super(*sources)
+        stylesheet_link_tag_without_needs(*sources)
       end
     end
   end
