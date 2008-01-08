@@ -2,16 +2,12 @@ module Intridea
   module NeedyControllers
     def self.included(base)
       base.extend(ClassMethods)
-      
     end
     
     module ClassMethods
       def needs(options = {})
         unless options[:record].blank?
-          add_grab( [options.delete(:record), options] )
-          
-          before_filter :do_grabs
-          include Intridea::NeedyControllers::InstanceMethods
+          memoize_record(options.delete(:record), options)
         else
           unless options[:styles].nil?
             styles = options[:styles].is_a?(Array) ? options[:styles] : Array.new << options[:styles]
@@ -24,17 +20,22 @@ module Intridea
             behaves_with *scripts
           end
         end  
-      end 
-
-      @@grab_options = Array.new
-      
-      def add_grab(options)
-        @@grab_options << options
       end
       
-      def grab_options
-        @@grab_options
-      end      
+      private
+
+      def memoize_record(record, options)
+        options[:as]     ||= record
+        options[:from]   ||= :id
+        
+        class_eval <<-RUBY
+          def #{options[:as].to_s}
+            @#{options[:as].to_s} ||= #{record.to_s.camelize.constantize}.find_by_id(params[:#{options[:from].to_s}])
+          end
+          
+          helper_method :#{options[:as].to_s}
+        RUBY
+      end
     end 
     
     module InstanceMethods

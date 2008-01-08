@@ -1,20 +1,29 @@
-= NeedyControllers
+NeedyControllers
+================
 
-Needy Controllers is a way to DRY up commonly used tasks from both controllers and views to save time and effort. It consists of a single call with a number of options.
+Needy Controllers is a way to DRY up commonly used tasks from both controllers and views 
+to save time and effort. It consists of a single call with a number of options.
 
-== Description
+Description
+-----------
 
-With needy controllers, you can include stylesheets, javascripts, and records in your controllers and views with a much greater deal of specificity and automation than hand-coding.
+With needy controllers, you can include stylesheets, javascripts, and memoized record 
+helpers in your controllers and views with a much greater deal of specificity and 
+automation than hand-coding.
 
-== Installation
+Installation
+------------
 
 script/plugin install http://svn.intridea.com/svn/public/needy_controllers
 
-== Usage
+Usage
+=====
 
-=== Styles and Scripts
+Styles and Scripts
+------------------
 
-To use Needy Controllers for styles and scripts, you simply call needs inside your controller like so:
+To use Needy Controllers for styles and scripts, you simply call a "needs"  option
+inside your controller like so:
 
 class MyController < ApplicationController
   needs :styles => :standard
@@ -32,34 +41,36 @@ class MyController < ApplicationController
   end
 end
 
-Now that you have created your behavior and style chains, you need to include them in the view. Luckily, this is exceedingly easy! Just include :needs in your include and link tags like so:
+Now that you have created your behavior and style chains, you need to include them 
+in the view. Luckily, this is exceedingly easy! Just include :needs in your include 
+and link tags like so:
 
 <%= stylesheet_link_tag 'something', :needs %>
 <%= javascript_include_tag 'prototype', :needs, 'effects' %>
 
-=== Model Fetching
+Model Fetching
+--------------
 
-To use Needy Controllers for fetching records, you use it similarly, and it sets the instance variable:
+To use Needy Controllers for fetching records, you use it similarly, and it sets 
+the instance variable:
 
 class MyController < ApplicationController
   # here's a standard problem
-  needs :record => :user, :except => :index
-  
-  def index
-    # no @user here
-  end
-  
-  def show
-    # you can access @user in your view for this action
-  end
+  needs :record => :user, :from => :id, :as => :user
 end
 
-You can use :as to rename the instance variable and :from for the source id (default is params[:id]):
+The :from and :as options in this example are the defaults (:id for :from and :as 
+defaults to the name of the record). This will create a method ("user" in the example)
+that will be accessible both from the controller and from the view as a helper. It
+will find the record with a matching ID to the URL parameter associated with the
+:from option. Therefore if you had nested resources you could call it as such:
 
-needs :record => :user, :as => :person, :from => params[:user_id]
+needs :record => :user, :from => :user_id
 
-== Other
+Resources
+=========
 
-Created by Michael Bleigh (michael@intridea.com) of Intridea (http://www.intridea.com)
+Created by Michael Bleigh (michael@intridea.com) 
+        of Intridea (http://www.intridea.com)
 
 Comments, bugs, and patches go to http://trac.intridea.com/trac/public
