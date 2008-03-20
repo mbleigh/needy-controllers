@@ -18,6 +18,18 @@ module Intridea
         append_behavior_to_chain(behaviors)
       end
       
+      def does_not_behave_with(*behaviors)
+        behaviors = behaviors.collect(&:to_s)
+        behaviors.each{|b| behavior_chain.delete(b)}
+        update_behavior_conditions(behaviors,[])
+      end
+      
+      def flush_behaviors
+        write_inheritable_attribute('behavior_chain',[])
+        write_inheritable_attribute('included_behavior_actions', {})
+        write_inheritable_attribute('excluded_behavior_actions', {})        
+      end
+      
       def included_behavior_actions #:nodoc:
         @included_behavior_actions ||= read_inheritable_attribute('included_behavior_actions') || {}
       end

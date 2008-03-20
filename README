@@ -67,6 +67,21 @@ will find the record with a matching ID to the URL parameter associated with the
 
 needs :record => :user, :from => :user_id
 
+Flushing and Removal of Needs
+-----------------------------
+
+If for some reason you want a controller not to inherit existing needs or you for some 
+reason want to remove needs, there's a simple way to remove them:
+
+class MyController < ApplicationController
+  does_not_need :anything       # removes all styles and behaviors from the need chain
+  does_not_need :any_styles
+  does_not_need :any_scripts
+  does_not_need :styles => "some_style"
+  does_not_need :styles => ["some_style", "another_one"]  
+  does_not_need :scripts => "some_script"
+end
+
 Resources
 =========
 

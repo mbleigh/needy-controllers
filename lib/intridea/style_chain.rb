@@ -18,6 +18,18 @@ module Intridea
         append_style_to_chain(styles)
       end
       
+      def does_not_style_with(*styles)
+        styles = styles.collect(&:to_s)
+        styles.each{|s| style_chain.delete(s)}
+        update_style_conditions(styles,[])
+      end
+      
+      def flush_styles
+        write_inheritable_attribute('style_chain',[])
+        write_inheritable_attribute('included_style_actions', {})
+        write_inheritable_attribute('excluded_style_actions', {})        
+      end
+      
       def included_style_actions #:nodoc:
         @included_style_actions ||= read_inheritable_attribute('included_style_actions') || {}
       end

@@ -22,6 +22,24 @@ module Intridea
         end  
       end
       
+      def does_not_need(arg)
+        if arg.is_a?(Hash)
+          if arg[:styles]
+            does_not_style_with(*arg[:styles])
+          end
+          if arg[:scripts]
+            does_not_behave_with(*arg[:scripts])
+          end
+        elsif arg == :anything
+          flush_styles
+          flush_behaviors
+        elsif arg == :any_styles
+          flush_styles
+        elsif arg == :any_scripts
+          flush_behaviors
+        end
+      end
+      
       private
 
       def memoize_record(record, options)
@@ -35,28 +53,6 @@ module Intridea
           
           helper_method :#{options[:as].to_s}
         RUBY
-      end
-    end 
-    
-    module InstanceMethods
-      def do_grabs
-        self.class.grab_options.each do |grab_option|
-          grab(*grab_option)
-        end
-      end
-      
-      def grab(object, options = {})
-      	options[:from] ||= params[:id]
-      	options[:except] ||= Array.new
-      	options[:only] ||= Array.new
-      	options[:as] ||= object
-
-      	if params[:id].nil?
-      	  instance_variable_set("@#{options[:as].to_s}", nil)
-      	  return
-      	end
-
-      	instance_variable_set("@#{options[:as].to_s}", object.to_s.classify.constantize.find(options[:from])) if !options[:except].include?(action_name) or (!options[:only].nil? and options[:only].include?(action_name))
       end
     end
   end
