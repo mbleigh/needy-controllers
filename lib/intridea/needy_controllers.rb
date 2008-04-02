@@ -48,7 +48,11 @@ module Intridea
         
         class_eval <<-RUBY
           def #{options[:as].to_s}
-            @#{options[:as].to_s} ||= #{record.to_s.camelize.constantize}.find_by_id(params[:#{options[:from].to_s}])
+            if #{record.to_s.camelize.constantize}.respond_to?(:from_param)
+              @#{options[:as].to_s} ||= #{record.to_s.camelize.constantize}.from_param(params[:#{options[:from].to_s}])
+            else
+              @#{options[:as].to_s} ||= #{record.to_s.camelize.constantize}.find_by_id(params[:#{options[:from].to_s}])
+            end
           end
           
           helper_method :#{options[:as].to_s}
