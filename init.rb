@@ -10,3 +10,9 @@ ActionController::Base.send :include, Intridea::NeedyControllers
 
 ActionView::Base.send :include, Intridea::NeedyControllers::Helpers
 ActionView::Base.send :alias_method_chain, :stylesheet_link_tag, :needs
+
+class ActiveRecord::Base
+  def self.from_param(parameter)
+    find(parameter.to_i)
+  end
+end
