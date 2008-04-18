@@ -1,3 +1,5 @@
+require 'intridea/needy_controllers'
+
 ActionController::Base.send :include, Intridea::StyleChain
 ActionView::Base.send :include, Intridea::StyleChain::Helpers
 

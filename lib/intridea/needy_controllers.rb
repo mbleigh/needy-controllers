@@ -1,3 +1,6 @@
+require 'intridea/behavior_chain'
+require 'intridea/style_chain'
+
 module Intridea
   module NeedyControllers
     def self.included(base)
